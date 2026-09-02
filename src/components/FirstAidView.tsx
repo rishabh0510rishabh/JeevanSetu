@@ -119,17 +119,19 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Banner / Hero Intro */}
-      <div className="bg-gradient-to-r from-red-950/60 via-slate-900 to-slate-900 border border-red-500/30 rounded-2xl p-4 sm:p-5 shadow-xl">
+      {/* Top Clay Banner / Hero Intro */}
+      <div className="clay-card-red p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-red-400" />
-              <h1 className="text-lg sm:text-xl font-extrabold text-white">
+              <div className="w-8 h-8 rounded-xl bg-red-500 text-white flex items-center justify-center shadow-md shadow-red-500/30">
+                <Activity className="w-5 h-5" />
+              </div>
+              <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                 Multimodal Emergency &amp; First-Aid Assistant
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+            <p className="text-xs sm:text-sm text-slate-700 mt-1 max-w-2xl font-medium leading-relaxed">
               Describe what happened or take a photo of an injury (cut, burn, spill, reaction) to get immediate plain-language steps within seconds.
             </p>
           </div>
@@ -137,7 +139,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={onOpenDialer}
-              className="flex items-center gap-1.5 bg-red-600 hover:bg-red-500 active:scale-95 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow-md shadow-red-900/40"
+              className="clay-btn-red flex items-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Call {emergencyNumber}</span>
@@ -146,8 +148,8 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
         </div>
 
         {/* Rapid Test Presets */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+        <div className="mt-4 pt-3.5 border-t border-red-200/80">
+          <span className="text-[11px] font-extrabold text-red-900/80 uppercase tracking-wider block mb-2">
             Instant Test Scenarios:
           </span>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -155,9 +157,9 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               <button
                 key={preset.id}
                 onClick={() => handleApplyPreset(preset)}
-                className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 hover:border-red-500/50 px-2.5 py-1.5 rounded-lg text-xs font-medium transition"
+                className="clay-btn bg-white hover:bg-red-50 text-slate-800 border border-red-200/80 px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                <span className="w-2 h-2 rounded-full bg-red-500 shadow-sm" />
                 <span>{preset.title}</span>
               </button>
             ))}
@@ -165,20 +167,22 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
         </div>
       </div>
 
-      {/* Input Section */}
-      <form onSubmit={handleSubmit} className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+      {/* Input Section - Tactile Clay Card */}
+      <form onSubmit={handleSubmit} className="clay-card p-4 sm:p-6 space-y-4">
         <div>
-          <label htmlFor="first-aid-input" className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+          <label htmlFor="first-aid-input" className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
             Describe the situation or injury:
           </label>
-          <textarea
-            id="first-aid-input"
-            rows={3}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="e.g. 'I burned my hand on the stove and blisters are forming', 'deep kitchen knife cut with continuous bleeding', 'someone is coughing and choking'..."
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition resize-none"
-          />
+          <div className="clay-inset p-1">
+            <textarea
+              id="first-aid-input"
+              rows={3}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="e.g. 'I burned my hand on the stove and blisters are forming', 'deep kitchen knife cut with continuous bleeding', 'someone is coughing and choking'..."
+              className="w-full bg-transparent p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none font-medium"
+            />
+          </div>
         </div>
 
         {/* Media / Photo Upload Actions */}
@@ -187,14 +191,14 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
             <button
               type="button"
               onClick={() => setIsCameraOpen(true)}
-              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition"
+              className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
             >
-              <Camera className="w-4 h-4 text-red-400" />
+              <Camera className="w-4 h-4 text-red-500" />
               <span>Use Camera</span>
             </button>
 
-            <label className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold cursor-pointer transition">
-              <Upload className="w-4 h-4 text-sky-400" />
+            <label className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
+              <Upload className="w-4 h-4 text-sky-600" />
               <span>Upload Photo</span>
               <input
                 type="file"
@@ -208,7 +212,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedImage(null)}
-                className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 p-1"
+                className="text-xs text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 p-1.5 cursor-pointer ml-1"
                 title="Remove photo"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -222,7 +226,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-xs text-slate-400 hover:text-slate-200 px-3 py-2 rounded-xl transition"
+                className="clay-btn bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 px-3.5 py-2 text-xs font-bold border border-slate-200 cursor-pointer"
               >
                 Clear
               </button>
@@ -231,7 +235,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
             <button
               type="submit"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg shadow-red-900/40 active:scale-95 transition"
+              className="clay-btn-red flex items-center gap-2 px-5 py-2.5 text-sm font-black cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
             >
               {isLoading ? (
                 <>
@@ -240,7 +244,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <Sparkles className="w-4 h-4 text-amber-200" />
                   <span>Get Step-by-Step Guidance</span>
                 </>
               )}
@@ -250,21 +254,23 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
         {/* Selected Image Thumbnail */}
         {selectedImage && (
-          <div className="relative inline-block mt-2 border-2 border-red-500/40 rounded-xl overflow-hidden bg-black max-w-xs shadow-md">
-            <img
-              src={selectedImage}
-              alt="Injury Preview"
-              className="max-h-40 w-auto object-cover"
-            />
-            <div className="absolute top-1 right-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded">
-              Ready for AI Inspection
+          <div className="clay-card p-2 inline-block mt-2 max-w-xs">
+            <div className="relative rounded-xl overflow-hidden border border-red-200">
+              <img
+                src={selectedImage}
+                alt="Injury Preview"
+                className="max-h-40 w-auto object-cover"
+              />
+              <div className="absolute top-1 right-1 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                Ready for AI Inspection
+              </div>
             </div>
           </div>
         )}
 
         {errorMsg && (
-          <div className="bg-red-950/80 border border-red-500/50 rounded-xl p-3 text-xs text-red-200 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <div className="clay-card-red p-3 text-xs text-red-900 font-medium flex items-center gap-2 border border-red-300">
+            <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -283,15 +289,15 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
           {/* Conservative Severity Escalation Prominent Header */}
           {guidance.isEmergency || guidance.severity === 'CRITICAL_EMERGENCY' || guidance.severity === 'HIGH' ? (
-            <div className="bg-red-600 border-2 border-red-400 text-white rounded-2xl p-4 sm:p-5 shadow-2xl shadow-red-950 animate-pulse">
+            <div className="clay-btn-red p-4 sm:p-5 rounded-3xl animate-pulse">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-white text-red-600 flex items-center justify-center shrink-0 shadow-md">
+                  <div className="w-12 h-12 rounded-2xl bg-white text-red-600 flex items-center justify-center shrink-0 shadow-lg shadow-red-950/20">
                     <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="bg-white/20 text-white text-[11px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
+                      <span className="bg-white/20 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-inner">
                         High Severity Alert
                       </span>
                     </div>
@@ -304,9 +310,9 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={onOpenDialer}
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-red-600 font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-lg transition active:scale-95"
+                    className="flex-1 sm:flex-initial clay-btn bg-white hover:bg-slate-50 text-red-600 font-black px-4 py-2.5 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg"
                   >
-                    <PhoneCall className="w-4 h-4" />
+                    <PhoneCall className="w-4 h-4 text-red-600" />
                     <span>Call {emergencyNumber} Now</span>
                   </button>
                   <button
@@ -318,7 +324,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                         guidance: guidance.steps,
                       })
                     }
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-2 bg-slate-900/90 hover:bg-slate-900 text-amber-300 font-bold px-4 py-2.5 rounded-xl text-sm transition shadow-lg"
+                    className="flex-1 sm:flex-initial clay-btn-amber px-4 py-2.5 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg"
                   >
                     <Bell className="w-4 h-4" />
                     <span>Alert Contacts</span>
@@ -329,30 +335,30 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
           ) : null}
 
           {/* Core Guidance Card */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+          <div className="clay-card p-4 sm:p-6 space-y-5">
             {/* Meta Header & Audio Reader */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
                     Category:
                   </span>
-                  <span className="text-sm font-extrabold text-white bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+                  <span className="text-sm font-black text-slate-800 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200">
                     {guidance.category}
                   </span>
                   <span
-                    className={`text-xs font-bold px-2.5 py-1 rounded-lg uppercase ${
+                    className={`text-xs font-black px-3 py-1 rounded-xl uppercase ${
                       guidance.severity === 'CRITICAL_EMERGENCY'
-                        ? 'bg-red-600/30 text-red-400 border border-red-500/40'
+                        ? 'bg-red-100 text-red-700 border border-red-200'
                         : guidance.severity === 'HIGH'
-                        ? 'bg-amber-600/30 text-amber-400 border border-amber-500/40'
-                        : 'bg-emerald-600/30 text-emerald-400 border border-emerald-500/40'
+                        ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                        : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                     }`}
                   >
                     Severity: {guidance.severity.replace('_', ' ')}
                   </span>
                 </div>
-                <p className="text-sm text-slate-200 mt-2 font-medium">
+                <p className="text-sm text-slate-700 mt-2 font-semibold">
                   {guidance.summary}
                 </p>
               </div>
@@ -360,10 +366,10 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               {/* Audio Listen Button */}
               <button
                 onClick={handleToggleAudio}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition shadow-sm ${
+                className={`clay-btn px-4 py-2 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer ${
                   isPlayingAudio
-                    ? 'bg-amber-600 text-white animate-pulse'
-                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                    ? 'clay-btn-amber animate-pulse'
+                    : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200'
                 }`}
                 title="Listen to instructions read aloud"
               >
@@ -374,7 +380,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                   </>
                 ) : (
                   <>
-                    <Volume2 className="w-4 h-4 text-sky-400" />
+                    <Volume2 className="w-4 h-4 text-sky-600" />
                     <span>Listen Aloud</span>
                   </>
                 )}
@@ -383,20 +389,20 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
             {/* Step-by-Step Instructions */}
             <div>
-              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Step-by-Step First-Aid Protocol:</span>
               </h3>
               <div className="space-y-2.5">
                 {guidance.steps.map((step, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 text-slate-100 text-sm leading-relaxed"
+                    className="clay-inset-white p-3.5 flex items-start gap-3 text-slate-800 text-sm leading-relaxed"
                   >
-                    <span className="w-6 h-6 rounded-lg bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+                    <span className="w-6 h-6 rounded-lg bg-red-100 text-red-700 border border-red-200 flex items-center justify-center font-black text-xs shrink-0 mt-0.5 shadow-sm">
                       {index + 1}
                     </span>
-                    <span className="flex-1 font-medium">{step}</span>
+                    <span className="flex-1 font-semibold text-slate-800">{step}</span>
                   </div>
                 ))}
               </div>
@@ -404,15 +410,15 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
             {/* DO NOTS Warning Box */}
             {guidance.doNots && guidance.doNots.length > 0 && (
-              <div className="bg-amber-950/40 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
-                <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
-                  <XCircle className="w-4 h-4 text-amber-400" />
+              <div className="clay-card-amber p-4 space-y-2 border border-amber-300">
+                <div className="flex items-center gap-2 text-amber-950 text-xs font-black uppercase tracking-wider">
+                  <XCircle className="w-4 h-4 text-amber-600" />
                   <span>Crucial: What NOT To Do</span>
                 </div>
-                <ul className="space-y-1.5 text-xs text-amber-200/90 pl-1">
+                <ul className="space-y-1.5 text-xs text-amber-900 font-medium pl-1">
                   {guidance.doNots.map((dont, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-amber-400 font-bold">•</span>
+                      <span className="text-amber-600 font-bold">•</span>
                       <span>{dont}</span>
                     </li>
                   ))}
@@ -422,15 +428,15 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
             {/* Red Flag Warning Signs */}
             {guidance.warningSigns && guidance.warningSigns.length > 0 && (
-              <div className="bg-red-950/40 border border-red-500/40 rounded-xl p-3.5 space-y-2">
-                <div className="flex items-center gap-2 text-red-300 text-xs font-bold uppercase tracking-wider">
-                  <AlertTriangle className="w-4 h-4 text-red-400" />
+              <div className="clay-card-red p-4 space-y-2 border border-red-300">
+                <div className="flex items-center gap-2 text-red-950 text-xs font-black uppercase tracking-wider">
+                  <AlertTriangle className="w-4 h-4 text-red-600" />
                   <span>Red Flag Warning Signs (Seek ER If Observed)</span>
                 </div>
-                <ul className="space-y-1.5 text-xs text-red-200/90 pl-1">
+                <ul className="space-y-1.5 text-xs text-red-900 font-medium pl-1">
                   {guidance.warningSigns.map((flag, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-red-400 font-bold">•</span>
+                      <span className="text-red-600 font-bold">•</span>
                       <span>{flag}</span>
                     </li>
                   ))}
@@ -440,18 +446,18 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
 
             {/* When to Seek Care Info */}
             {guidance.whenToSeekCare && (
-              <div className="flex items-start gap-2 bg-slate-800/40 p-3 rounded-xl border border-slate-700/60 text-xs text-slate-300">
-                <Info className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+              <div className="clay-card-blue p-3.5 flex items-start gap-2.5 text-xs text-sky-950 border border-sky-200">
+                <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-200 font-semibold">When to seek professional clinic care: </strong>
-                  <span>{guidance.whenToSeekCare}</span>
+                  <strong className="text-sky-900 font-bold">When to seek professional clinic care: </strong>
+                  <span className="font-medium">{guidance.whenToSeekCare}</span>
                 </div>
               </div>
             )}
 
             {/* Bottom Contact Alert Button */}
-            <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-slate-400">
+            <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs text-slate-500 font-medium">
                 Need to keep a roommate or RA updated on your status?
               </span>
               <button
@@ -463,7 +469,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                     guidance: guidance.steps,
                   })
                 }
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition"
+                className="w-full sm:w-auto clay-btn-amber px-4 py-2.5 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Bell className="w-4 h-4" />
                 <span>Alert Emergency Contact ({emergencyContacts.length})</span>

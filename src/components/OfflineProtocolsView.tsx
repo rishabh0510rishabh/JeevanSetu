@@ -71,28 +71,32 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="clay-card-emerald p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-emerald-400" />
-            <h1 className="text-lg sm:text-xl font-extrabold text-white">
+            <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
               Instant Offline Emergency Protocols
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-700 mt-1 max-w-2xl font-medium leading-relaxed">
             Cached directly in your device. Access life-saving first-aid steps immediately, even in basement labs, dead zones, or during network outages.
           </p>
         </div>
 
         <div className="w-full sm:w-64 relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search burns, bleeding, choking..."
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-          />
+          <div className="clay-inset flex items-center px-3 py-1.5">
+            <Search className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search burns, bleeding, CPR..."
+              className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 font-semibold focus:outline-none"
+            />
+          </div>
         </div>
       </div>
 
@@ -100,10 +104,10 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: List of Protocols */}
         <div className="lg:col-span-4 space-y-2">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block px-1 mb-2">
+          <span className="text-[11px] font-black text-slate-600 uppercase tracking-wider block px-1 mb-2">
             Available Protocols ({filtered.length})
           </span>
-          <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+          <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
             {filtered.map((protocol) => {
               const isSelected = protocol.id === activeProtocol.id;
               return (
@@ -114,27 +118,33 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
                     setIsPlayingAudio(false);
                     setSelectedProtocolId(protocol.id);
                   }}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition ${
+                  className={`p-3.5 rounded-2xl cursor-pointer transition ${
                     isSelected
-                      ? 'bg-slate-800 border-emerald-500/60 shadow-lg ring-1 ring-emerald-500/30'
-                      : 'bg-slate-900/80 border-slate-800 hover:border-slate-700 hover:bg-slate-900'
+                      ? 'clay-btn-emerald text-white'
+                      : 'clay-surface bg-white text-slate-800 hover:bg-slate-50 border border-slate-200'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-sm font-bold text-white truncate">{protocol.title}</h3>
+                    <h3 className={`text-sm font-black truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                      {protocol.title}
+                    </h3>
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                        protocol.severity === 'CRITICAL_EMERGENCY'
-                          ? 'bg-red-600/30 text-red-400 border border-red-500/40'
+                      className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase ${
+                        isSelected
+                          ? 'bg-white/20 text-white'
+                          : protocol.severity === 'CRITICAL_EMERGENCY'
+                          ? 'bg-red-100 text-red-700'
                           : protocol.severity === 'HIGH'
-                          ? 'bg-amber-600/30 text-amber-400 border border-amber-500/40'
-                          : 'bg-emerald-600/30 text-emerald-400 border border-emerald-500/40'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-emerald-100 text-emerald-800'
                       }`}
                     >
                       {protocol.severity === 'CRITICAL_EMERGENCY' ? 'Critical' : protocol.severity}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className={`text-xs mt-1 line-clamp-2 leading-relaxed font-medium ${
+                    isSelected ? 'text-emerald-100' : 'text-slate-600'
+                  }`}>
                     {protocol.summary}
                   </p>
                 </div>
@@ -144,30 +154,30 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
         </div>
 
         {/* Right Column: Active Protocol Display */}
-        <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+        <div className="lg:col-span-8 clay-card p-4 sm:p-6 space-y-5">
           {/* Header */}
-          <div className="flex flex-wrap items-start justify-between gap-3 pb-3 border-b border-slate-800">
+          <div className="flex flex-wrap items-start justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
                   {activeProtocol.category}
                 </span>
                 <span
-                  className={`text-xs font-extrabold px-2 py-0.5 rounded uppercase ${
+                  className={`text-xs font-black px-2.5 py-0.5 rounded-lg uppercase ${
                     activeProtocol.severity === 'CRITICAL_EMERGENCY'
-                      ? 'bg-red-600 text-white'
+                      ? 'bg-red-100 text-red-700 border border-red-200'
                       : activeProtocol.severity === 'HIGH'
-                      ? 'bg-amber-500 text-slate-950'
-                      : 'bg-emerald-600 text-white'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                      : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}
                 >
                   {activeProtocol.severity.replace('_', ' ')}
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1">
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 mt-2">
                 {activeProtocol.title}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
                 {activeProtocol.summary}
               </p>
             </div>
@@ -175,10 +185,10 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
             {/* Audio Button */}
             <button
               onClick={handleToggleAudio}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition shadow-sm ${
+              className={`clay-btn px-4 py-2 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer ${
                 isPlayingAudio
-                  ? 'bg-emerald-600 text-white animate-pulse'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                  ? 'clay-btn-emerald animate-pulse'
+                  : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200'
               }`}
             >
               {isPlayingAudio ? (
@@ -188,7 +198,7 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
                 </>
               ) : (
                 <>
-                  <Volume2 className="w-4 h-4 text-emerald-400" />
+                  <Volume2 className="w-4 h-4 text-emerald-600" />
                   <span>Listen Aloud</span>
                 </>
               )}
@@ -196,46 +206,46 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
           </div>
 
           {/* Immediate Critical Action Box */}
-          <div className="bg-red-950/40 border-2 border-red-500/40 rounded-xl p-3.5">
-            <span className="text-[11px] font-bold text-red-300 uppercase tracking-wider block mb-1">
+          <div className="clay-card-red p-4 border border-red-300">
+            <span className="text-[11px] font-black text-red-950 uppercase tracking-wider block mb-1">
               Immediate Critical Action:
             </span>
-            <p className="text-sm font-bold text-white">
+            <p className="text-sm font-black text-red-900">
               {activeProtocol.immediateAction}
             </p>
           </div>
 
           {/* Step-by-Step Instructions */}
           <div>
-            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>Step-by-Step Procedure:</span>
             </h3>
             <div className="space-y-2.5">
               {activeProtocol.steps.map((step, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-3 bg-slate-950/70 border border-slate-800 rounded-xl p-3 text-slate-100 text-sm leading-relaxed"
+                  className="clay-inset-white p-3.5 flex items-start gap-3 text-slate-800 text-sm leading-relaxed"
                 >
-                  <span className="w-6 h-6 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-black text-xs shrink-0 mt-0.5 shadow-sm">
                     {idx + 1}
                   </span>
-                  <span className="flex-1 font-medium">{step}</span>
+                  <span className="flex-1 font-semibold text-slate-800">{step}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Do Nots Precautions */}
-          <div className="bg-amber-950/40 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
-            <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
-              <XCircle className="w-4 h-4 text-amber-400" />
+          <div className="clay-card-amber p-4 space-y-2 border border-amber-300">
+            <div className="flex items-center gap-2 text-amber-950 text-xs font-black uppercase tracking-wider">
+              <XCircle className="w-4 h-4 text-amber-600" />
               <span>Critical: What NOT to do</span>
             </div>
-            <ul className="space-y-1 text-xs text-amber-200/90 pl-1">
+            <ul className="space-y-1 text-xs text-amber-900 font-medium pl-1">
               {activeProtocol.doNots.map((dont, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-amber-400 font-bold">•</span>
+                  <span className="text-amber-600 font-bold">•</span>
                   <span>{dont}</span>
                 </li>
               ))}
@@ -243,15 +253,15 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
           </div>
 
           {/* Red Flag Warning Signs */}
-          <div className="bg-red-950/40 border border-red-500/40 rounded-xl p-3.5 space-y-2">
-            <div className="flex items-center gap-2 text-red-300 text-xs font-bold uppercase tracking-wider">
-              <AlertTriangle className="w-4 h-4 text-red-400" />
+          <div className="clay-card-red p-4 space-y-2 border border-red-300">
+            <div className="flex items-center gap-2 text-red-950 text-xs font-black uppercase tracking-wider">
+              <AlertTriangle className="w-4 h-4 text-red-600" />
               <span>Red Flag Warning Signs (Seek ER If Observed)</span>
             </div>
-            <ul className="space-y-1 text-xs text-red-200/90 pl-1">
+            <ul className="space-y-1 text-xs text-red-900 font-medium pl-1">
               {activeProtocol.redFlags.map((flag, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-red-400 font-bold">•</span>
+                  <span className="text-red-600 font-bold">•</span>
                   <span>{flag}</span>
                 </li>
               ))}
@@ -259,10 +269,10 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
           </div>
 
           {/* Actions at bottom */}
-          <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
             <button
               onClick={onOpenDialer}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition"
+              className="clay-btn-red px-4 py-2.5 text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Call Emergency {emergencyNumber}</span>
@@ -277,7 +287,7 @@ export const OfflineProtocolsView: React.FC<OfflineProtocolsViewProps> = ({
                   guidance: activeProtocol.steps,
                 })
               }
-              className="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition"
+              className="clay-btn-amber px-4 py-2.5 text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
             >
               <Bell className="w-4 h-4" />
               <span>Alert Emergency Contact</span>

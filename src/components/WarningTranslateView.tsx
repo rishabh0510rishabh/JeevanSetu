@@ -136,31 +136,33 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-sky-950/60 via-slate-900 to-slate-900 border border-sky-500/30 rounded-2xl p-4 sm:p-5 shadow-xl">
+      {/* Top Clay Banner */}
+      <div className="clay-card-blue p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-sky-400" />
-              <h1 className="text-lg sm:text-xl font-extrabold text-white">
+              <div className="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/30">
+                <Globe className="w-5 h-5" />
+              </div>
+              <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                 Multilingual Safety Warning &amp; Sign Translator
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+            <p className="text-xs sm:text-sm text-slate-700 mt-1 max-w-2xl font-medium leading-relaxed">
               Photograph campus hazard signs, chemical labels, or evacuation notices to instantly translate them with preserved urgency into your native language.
             </p>
           </div>
 
           {/* Target Language Selector */}
-          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700/80 rounded-xl p-1.5 shadow-inner shrink-0">
-            <Languages className="w-4 h-4 text-sky-400 ml-1.5" />
+          <div className="clay-inset p-1.5 flex items-center gap-2 shrink-0">
+            <Languages className="w-4 h-4 text-sky-600 ml-1.5" />
             <select
               value={targetLangCode}
               onChange={(e) => handleLanguageSelect(e.target.value)}
-              className="bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none pr-2 cursor-pointer"
+              className="bg-transparent text-xs sm:text-sm font-black text-slate-900 focus:outline-none pr-2 cursor-pointer"
             >
               {SUPPORTED_LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code} className="bg-slate-900 text-white">
+                <option key={lang.code} value={lang.code} className="bg-white text-slate-900">
                   {lang.flag} {lang.name} ({lang.nativeName})
                 </option>
               ))}
@@ -169,8 +171,8 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
         </div>
 
         {/* Preset Warning Signs */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+        <div className="mt-4 pt-3.5 border-t border-sky-200/80">
+          <span className="text-[11px] font-extrabold text-sky-950 uppercase tracking-wider block mb-2">
             Sample Campus Warning Signs:
           </span>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -178,7 +180,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
               <button
                 key={preset.id}
                 onClick={() => handleApplyPreset(preset)}
-                className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 hover:border-sky-500/50 px-2.5 py-1.5 rounded-lg text-xs font-medium transition"
+                className="clay-btn bg-white hover:bg-sky-50 text-slate-800 border border-sky-200 px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
               >
                 <span>{preset.simulatedVisual.split(' ')[0]}</span>
                 <span>{preset.title}</span>
@@ -189,19 +191,21 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
       </div>
 
       {/* Input Form */}
-      <form onSubmit={handleSubmit} className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+      <form onSubmit={handleSubmit} className="clay-card p-4 sm:p-6 space-y-4">
         <div>
-          <label htmlFor="warning-sign-input" className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+          <label htmlFor="warning-sign-input" className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
             Enter warning sign text or upload photo:
           </label>
-          <textarea
-            id="warning-sign-input"
-            rows={3}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="e.g. 'DANGER: FLAMMABLE CHEMICALS & BIOHAZARD. EYE PROTECTION REQUIRED' or 'EMERGENCY EVACUATION STAIRWELL NOTICE'..."
-            className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition resize-none"
-          />
+          <div className="clay-inset p-1">
+            <textarea
+              id="warning-sign-input"
+              rows={3}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="e.g. 'DANGER: FLAMMABLE CHEMICALS & BIOHAZARD. EYE PROTECTION REQUIRED' or 'EMERGENCY EVACUATION STAIRWELL NOTICE'..."
+              className="w-full bg-transparent p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none font-medium"
+            />
+          </div>
         </div>
 
         {/* Media / Camera Controls */}
@@ -210,14 +214,14 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
             <button
               type="button"
               onClick={() => setIsCameraOpen(true)}
-              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition"
+              className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
             >
-              <Camera className="w-4 h-4 text-sky-400" />
+              <Camera className="w-4 h-4 text-sky-600" />
               <span>Photograph Sign</span>
             </button>
 
-            <label className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold cursor-pointer transition">
-              <Upload className="w-4 h-4 text-emerald-400" />
+            <label className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
+              <Upload className="w-4 h-4 text-emerald-600" />
               <span>Upload Image</span>
               <input
                 type="file"
@@ -231,7 +235,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedImage(null)}
-                className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 p-1"
+                className="text-xs text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 p-1.5 cursor-pointer ml-1"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Remove</span>
@@ -244,7 +248,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-xs text-slate-400 hover:text-slate-200 px-3 py-2 rounded-xl transition"
+                className="clay-btn bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 px-3.5 py-2 text-xs font-bold border border-slate-200 cursor-pointer"
               >
                 Clear
               </button>
@@ -253,7 +257,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
             <button
               type="submit"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg shadow-sky-900/40 active:scale-95 transition"
+              className="clay-btn-blue flex items-center gap-2 px-5 py-2.5 text-sm font-black cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
             >
               {isLoading ? (
                 <>
@@ -262,7 +266,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <Sparkles className="w-4 h-4 text-sky-200" />
                   <span>Translate to {currentLang.name}</span>
                 </>
               )}
@@ -271,16 +275,18 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
         </div>
 
         {selectedImage && (
-          <div className="relative inline-block mt-2 border-2 border-sky-500/40 rounded-xl overflow-hidden bg-black max-w-xs shadow-md">
-            <img src={selectedImage} alt="Warning Sign Preview" className="max-h-40 w-auto object-cover" />
-            <div className="absolute top-1 right-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded">
-              Ready for OCR
+          <div className="clay-card p-2 inline-block mt-2 max-w-xs">
+            <div className="relative rounded-xl overflow-hidden border border-sky-200">
+              <img src={selectedImage} alt="Warning Sign Preview" className="max-h-40 w-auto object-cover" />
+              <div className="absolute top-1 right-1 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                Ready for OCR
+              </div>
             </div>
           </div>
         )}
 
         {errorMsg && (
-          <div className="bg-red-950/80 border border-red-500/50 rounded-xl p-3 text-xs text-red-200">
+          <div className="clay-card-red p-3 text-xs text-red-900 font-medium flex items-center gap-2 border border-red-300">
             {errorMsg}
           </div>
         )}
@@ -298,22 +304,22 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
       {translation && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
           {/* Action Directive Highlight Banner */}
-          <div className="bg-slate-900 border-2 border-sky-500/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
+          <div className="clay-card p-4 sm:p-6 space-y-4">
             {/* Top Badge & Urgency Indicator */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
                 <span
-                  className={`text-xs font-extrabold px-3 py-1 rounded-lg uppercase tracking-wider ${
+                  className={`text-xs font-black px-3 py-1 rounded-xl uppercase tracking-wider ${
                     translation.hazardLevel === 'DANGER' || translation.hazardLevel === 'BIOHAZARD'
-                      ? 'bg-red-600 text-white animate-pulse'
+                      ? 'clay-btn-red text-white'
                       : translation.hazardLevel === 'WARNING' || translation.hazardLevel === 'FLAMMABLE'
-                      ? 'bg-amber-500 text-slate-950'
-                      : 'bg-sky-600 text-white'
+                      ? 'clay-btn-amber text-slate-900'
+                      : 'clay-btn-blue text-white'
                   }`}
                 >
                   {translation.hazardLevel}
                 </span>
-                <span className="text-xs text-slate-300 font-medium">
+                <span className="text-xs text-slate-600 font-bold">
                   {translation.urgencyTone}
                 </span>
               </div>
@@ -321,10 +327,10 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
               {/* Audio Listen */}
               <button
                 onClick={handleToggleAudio}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-sm ${
+                className={`clay-btn px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer ${
                   isPlayingAudio
-                    ? 'bg-sky-600 text-white animate-pulse'
-                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                    ? 'clay-btn-blue text-white animate-pulse'
+                    : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200'
                 }`}
                 title="Listen to translated warning"
               >
@@ -335,7 +341,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
                   </>
                 ) : (
                   <>
-                    <Volume2 className="w-3.5 h-3.5 text-sky-400" />
+                    <Volume2 className="w-3.5 h-3.5 text-sky-600" />
                     <span>Listen ({currentLang.name})</span>
                   </>
                 )}
@@ -343,11 +349,11 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
             </div>
 
             {/* Direct Safety Action Directive */}
-            <div className="bg-sky-950/40 border border-sky-500/40 rounded-xl p-3.5">
-              <span className="text-[11px] font-bold text-sky-300 uppercase tracking-wider block mb-1">
+            <div className="clay-card-blue p-4">
+              <span className="text-[11px] font-black text-sky-950 uppercase tracking-wider block mb-1">
                 Immediate Required Action ({currentLang.nativeName}):
               </span>
-              <p className="text-sm sm:text-base font-extrabold text-white leading-relaxed">
+              <p className="text-sm sm:text-base font-black text-slate-900 leading-relaxed">
                 {translation.actionDirective}
               </p>
             </div>
@@ -355,23 +361,23 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
             {/* Side-by-Side Comparison: Original vs Translated */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Original Text */}
-              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2">
-                <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+              <div className="clay-inset p-3.5 space-y-2">
+                <div className="flex items-center justify-between text-xs text-slate-500 font-black uppercase tracking-wider">
                   <span>Original Sign Text</span>
-                  <span className="text-slate-500">{translation.detectedSourceLanguage}</span>
+                  <span className="text-slate-400 font-bold">{translation.detectedSourceLanguage}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-200 font-mono whitespace-pre-wrap leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-800 font-mono whitespace-pre-wrap leading-relaxed">
                   {translation.originalText}
                 </p>
               </div>
 
               {/* Translated Text */}
-              <div className="bg-slate-950/80 border border-sky-500/30 rounded-xl p-3.5 space-y-2">
-                <div className="flex items-center justify-between text-xs text-sky-400 font-bold uppercase tracking-wider">
+              <div className="clay-inset-white p-3.5 space-y-2">
+                <div className="flex items-center justify-between text-xs text-sky-700 font-black uppercase tracking-wider">
                   <span>Translated Output</span>
-                  <span className="text-sky-300">{currentLang.flag} {translation.targetLanguage}</span>
+                  <span className="text-sky-800 font-bold">{currentLang.flag} {translation.targetLanguage}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-sky-100 font-semibold whitespace-pre-wrap leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-900 font-bold whitespace-pre-wrap leading-relaxed">
                   {translation.translatedText}
                 </p>
               </div>
@@ -380,16 +386,16 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
             {/* Detected Symbols / Pictograms */}
             {translation.symbolsDetected && translation.symbolsDetected.length > 0 && (
               <div>
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <span className="text-xs font-black text-slate-700 uppercase tracking-wider block mb-2">
                   Recognized Safety Symbols &amp; Hazards:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {translation.symbolsDetected.map((sym, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2.5 py-1 rounded-lg font-medium"
+                      className="inline-flex items-center gap-1.5 clay-surface bg-white text-slate-800 text-xs px-3 py-1 rounded-xl font-bold border border-slate-200"
                     >
-                      <AlertOctagon className="w-3.5 h-3.5 text-amber-400" />
+                      <AlertOctagon className="w-3.5 h-3.5 text-amber-500" />
                       <span>{sym}</span>
                     </span>
                   ))}
@@ -399,14 +405,14 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
 
             {/* Additional Safety Notes */}
             {translation.notes && (
-              <div className="flex items-start gap-2 text-xs text-slate-400 bg-slate-950/40 p-3 rounded-xl border border-slate-800">
-                <Info className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                <span>{translation.notes}</span>
+              <div className="clay-card-blue p-3.5 flex items-start gap-2 text-xs text-slate-700 border border-sky-200">
+                <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                <span className="font-medium">{translation.notes}</span>
               </div>
             )}
 
             {/* Alert Option */}
-            <div className="pt-2 border-t border-slate-800 flex justify-end">
+            <div className="pt-2 border-t border-slate-200 flex justify-end">
               <button
                 onClick={() =>
                   onOpenAlertModal({
@@ -416,7 +422,7 @@ export const WarningTranslateView: React.FC<WarningTranslateViewProps> = ({
                     guidance: [translation.actionDirective, translation.translatedText],
                   })
                 }
-                className="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition shadow"
+                className="clay-btn-amber text-xs sm:text-sm px-4 py-2.5 flex items-center gap-2 cursor-pointer"
               >
                 <Bell className="w-4 h-4" />
                 <span>Alert Emergency Contact About This Hazard</span>

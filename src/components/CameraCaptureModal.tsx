@@ -123,27 +123,29 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   return (
     <div
       id="camera-capture-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-4 sm:p-6 text-slate-100 relative flex flex-col max-h-[95vh]">
+      <div className="w-full max-w-lg clay-card p-5 sm:p-6 text-slate-800 relative flex flex-col max-h-[95vh] border border-red-300">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Camera className="w-5 h-5 text-red-400" />
-            <h3 className="font-bold text-base sm:text-lg text-white">{title}</h3>
+            <div className="w-8 h-8 rounded-xl bg-red-100 border border-red-300 flex items-center justify-center text-red-600 shadow-sm">
+              <Camera className="w-4 h-4" />
+            </div>
+            <h3 className="font-black text-base sm:text-lg text-slate-900 tracking-tight">{title}</h3>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1.5 rounded-lg bg-slate-800"
+            className="clay-btn bg-white hover:bg-slate-100 p-1.5 rounded-xl text-slate-500 hover:text-slate-800 cursor-pointer border border-slate-200"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Video / Preview Container */}
-        <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+        <div className="relative w-full aspect-video bg-slate-950 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner flex items-center justify-center">
           {capturedPreview ? (
             <img
               src={capturedPreview}
@@ -153,12 +155,12 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
           ) : cameraError ? (
             <div className="p-6 text-center space-y-3">
               <AlertCircle className="w-10 h-10 text-amber-400 mx-auto" />
-              <p className="text-xs sm:text-sm text-slate-300">{cameraError}</p>
+              <p className="text-xs sm:text-sm text-slate-200 font-medium">{cameraError}</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-semibold border border-slate-600"
+                className="clay-btn bg-white text-slate-800 px-4 py-2 text-xs font-bold inline-flex items-center gap-2 cursor-pointer shadow-md"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 text-emerald-600" />
                 <span>Upload From Device</span>
               </button>
             </div>
@@ -171,7 +173,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
                 muted
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 border-2 border-red-500/30 rounded-xl pointer-events-none" />
+              <div className="absolute inset-0 border-2 border-red-400/40 rounded-2xl pointer-events-none" />
             </>
           )}
 
@@ -191,14 +193,14 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
             <>
               <button
                 onClick={handleRetake}
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-sm font-semibold transition"
+                className="clay-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span>Retake</span>
               </button>
               <button
                 onClick={handleConfirm}
-                className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-bold shadow-lg transition"
+                className="clay-btn-emerald flex-1 flex items-center justify-center gap-2 py-3 text-sm font-black cursor-pointer shadow-emerald-500/30"
               >
                 <Check className="w-4 h-4" />
                 <span>Use This Photo</span>
@@ -208,17 +210,17 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
             <>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700"
+                className="clay-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-2 px-3.5 py-3 text-xs sm:text-sm font-bold cursor-pointer"
                 title="Upload image from gallery"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 text-slate-600" />
                 <span className="hidden sm:inline">Upload</span>
               </button>
 
               <button
                 onClick={handleSnap}
                 disabled={!!cameraError}
-                className="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white py-3 rounded-xl text-sm font-extrabold shadow-lg shadow-red-900/30 active:scale-95 transition"
+                className="clay-btn-red flex-1 flex items-center justify-center gap-2 py-3 text-sm font-black disabled:opacity-50 cursor-pointer shadow-red-500/30"
               >
                 <Camera className="w-5 h-5" />
                 <span>Capture Snapshot</span>
@@ -226,7 +228,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
 
               <button
                 onClick={toggleFacingMode}
-                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 p-3 rounded-xl text-xs font-semibold border border-slate-700"
+                className="clay-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 p-3 text-xs font-bold cursor-pointer"
                 title="Switch Camera (Front/Rear)"
               >
                 <RefreshCw className="w-4 h-4" />

@@ -69,14 +69,14 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#edf2f8] text-slate-800 flex flex-col font-sans selection:bg-red-500 selection:text-white">
       {/* 1. Persistent Safety Disclaimer Banner per PRD 6.1 */}
       <DisclaimerBanner
         emergencyNumber={emergencyNumber}
         onOpenDialer={() => setIsDialerOpen(true)}
       />
 
-      {/* 2. Top App Navigation Header */}
+      {/* 2. Top App Navigation Header with Claymorphism Navigation */}
       <Header
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
@@ -123,17 +123,17 @@ export function App() {
       </main>
 
       {/* 4. Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500">
+      <footer className="mt-8 border-t border-slate-200/80 bg-white/60 backdrop-blur-md py-4 px-4 text-center text-xs text-slate-500 shadow-sm">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-400">JeevanSetu</span>
+            <span className="font-extrabold text-slate-700">JeevanSetu</span>
             <span>•</span>
             <span>Accessible Multimodal Health &amp; Safety Companion</span>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsPrivacyOpen(true)}
-              className="text-slate-400 hover:text-slate-300 underline"
+              className="text-slate-600 hover:text-slate-900 font-medium underline"
             >
               Privacy &amp; Data Guarantees
             </button>
