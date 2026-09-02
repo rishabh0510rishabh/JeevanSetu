@@ -1,0 +1,11 @@
+{
+  "name": "jeevansetu",
+  "description": "Accessible Multimodal Health & Safety Companion providing instant AI-guided first-aid, multilingual warning sign translation, and one-tap emergency contact alerts.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
