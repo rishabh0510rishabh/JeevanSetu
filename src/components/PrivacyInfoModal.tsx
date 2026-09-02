@@ -32,77 +32,79 @@ export const PrivacyInfoModal: React.FC<PrivacyInfoModalProps> = ({
   return (
     <div
       id="privacy-info-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-lg clay-card p-5 sm:p-7 text-slate-800 relative max-h-[90vh] overflow-y-auto border border-emerald-300">
+      <div className="w-full max-w-lg bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-2xl relative max-h-[90vh] overflow-y-auto space-y-5 text-slate-900">
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="clay-btn bg-white hover:bg-slate-100 p-2 rounded-xl text-slate-500 hover:text-slate-800 absolute top-4 right-4 cursor-pointer border border-slate-200"
+          className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 absolute top-5 right-5 cursor-pointer border border-slate-200"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700 shadow-sm shadow-emerald-500/20">
+        {/* Modal Header */}
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700 shadow-xs">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-xl font-black text-slate-900 tracking-tight">Privacy &amp; Data Guarantees</h2>
-            <p className="text-xs text-emerald-800 font-bold">Zero persistent cloud health records</p>
+            <p className="text-xs text-emerald-700 font-bold">Zero persistent cloud health or image records</p>
           </div>
         </div>
 
         {clearedNotice ? (
           <div className="p-6 text-center space-y-2">
-            <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto animate-bounce" />
+            <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto animate-bounce" />
             <p className="text-base font-black text-slate-900">Session History Cleared!</p>
-            <p className="text-xs text-slate-600 font-medium">All ephemeral queries have been removed from local storage.</p>
+            <p className="text-xs text-slate-500 font-medium">All local queries and temporary cache have been cleared.</p>
           </div>
         ) : (
-          <div className="space-y-4 text-xs text-slate-700 font-medium">
-            <div className="flex items-start gap-3 clay-surface bg-white/90 p-3.5 rounded-2xl border border-slate-200">
+          <div className="space-y-3.5 text-xs text-slate-600 font-medium">
+            <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
               <EyeOff className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 font-black text-sm block">No Photo Storage</strong>
-                Photos captured or uploaded for injury/sign inspection are processed ephemerally in-memory and are never permanently saved to any server disk or cloud database.
+                <strong className="text-slate-900 font-bold text-sm block mb-0.5">No Cloud Photo Storage</strong>
+                Photos captured or uploaded for injury/sign inspection are processed ephemerally in-memory and are never saved to cloud databases or server disk.
               </div>
             </div>
 
-            <div className="flex items-start gap-3 clay-surface bg-white/90 p-3.5 rounded-2xl border border-slate-200">
+            <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
               <ServerOff className="w-5 h-5 text-purple-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 font-black text-sm block">One-Time Location Snapshot</strong>
-                GPS coordinates are only requested when you explicitly choose to dispatch an emergency alert to your designated contacts, and are not tracked in the background.
+                <strong className="text-slate-900 font-bold text-sm block mb-0.5">One-Time Location Snapshot</strong>
+                GPS coordinates are only retrieved on-demand when you explicitly broadcast an emergency alert to your designated contacts. No background tracking.
               </div>
             </div>
 
-            <div className="flex items-start gap-3 clay-surface bg-white/90 p-3.5 rounded-2xl border border-slate-200">
+            <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-2xs">
               <Database className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 font-black text-sm block">Client-Controlled Emergency Contacts</strong>
-                Your 1–5 designated contacts reside exclusively on your local device storage.
+                <strong className="text-slate-900 font-bold text-sm block mb-0.5">Device-Exclusive Contacts</strong>
+                Your 1–5 designated emergency contacts reside exclusively on your local browser cache.
               </div>
             </div>
 
             <div className="pt-2">
               <button
                 onClick={handleClearAll}
-                className="clay-btn bg-red-50 hover:bg-red-100 text-rose-700 border border-red-200 w-full flex items-center justify-center gap-2 py-2.5 text-xs font-black cursor-pointer shadow-sm"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition cursor-pointer shadow-2xs"
               >
                 <Trash2 className="w-4 h-4 text-rose-600" />
-                <span>Clear All Ephemeral Session Logs</span>
+                <span>Clear All Ephemeral Session Data</span>
               </button>
             </div>
 
-            <div className="text-center pt-1">
+            <div className="pt-1">
               <button
                 onClick={onClose}
-                className="clay-btn bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 w-full py-2.5 text-xs font-bold cursor-pointer"
+                className="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 transition cursor-pointer"
               >
-                Close Window
+                Close Privacy View
               </button>
             </div>
           </div>

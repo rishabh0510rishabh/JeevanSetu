@@ -15,6 +15,7 @@ import {
   setPreferredLanguage,
   getCampusEmergencyNumber,
 } from './services/storage';
+import { ShieldCheck, Sparkles, Heart } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<'first-aid' | 'translate' | 'protocols' | 'contacts'>('first-aid');
@@ -55,10 +56,10 @@ export function App() {
 
   const handleQuickAlert = () => {
     setAlertContext({
-      summary: 'QUICK EMERGENCY ALERT: Immediate campus assistance or check-in needed.',
+      summary: 'QUICK EMERGENCY ALERT: Immediate assistance or check-in requested.',
       severity: 'HIGH',
       category: 'Emergency Dispatch',
-      guidance: ['Student activated quick-alert button on JeevanSetu.'],
+      guidance: ['User activated quick-alert SOS button on JeevanSetu.'],
     });
     setIsAlertModalOpen(true);
   };
@@ -69,79 +70,90 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#edf2f8] text-slate-800 flex flex-col font-sans selection:bg-red-500 selection:text-white">
-      {/* 1. Persistent Safety Disclaimer Banner per PRD 6.1 */}
-      <DisclaimerBanner
-        emergencyNumber={emergencyNumber}
-        onOpenDialer={() => setIsDialerOpen(true)}
-      />
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] selection:bg-rose-500 selection:text-white relative overflow-x-hidden">
+      {/* Ambient Radial Gradient Backdrops */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-5%] left-[15%] w-[500px] h-[500px] bg-rose-200/40 rounded-full blur-[120px]" />
+        <div className="absolute top-[25%] right-[-5%] w-[450px] h-[450px] bg-sky-200/35 rounded-full blur-[130px]" />
+        <div className="absolute bottom-[-10%] left-[10%] w-[600px] h-[600px] bg-purple-200/30 rounded-full blur-[140px]" />
+      </div>
 
-      {/* 2. Top App Navigation Header with Claymorphism Navigation */}
-      <Header
-        currentTab={currentTab}
-        onSelectTab={setCurrentTab}
-        onOpenEmergencyModal={() => setIsDialerOpen(true)}
-        onOpenQuickAlert={handleQuickAlert}
-        onOpenPrivacyModal={() => setIsPrivacyOpen(true)}
-        contactCount={contacts.length}
-      />
+      <div className="relative z-10 flex flex-col flex-1">
+        {/* 1. Safety Notice Ribbon */}
+        <DisclaimerBanner
+          emergencyNumber={emergencyNumber}
+          onOpenDialer={() => setIsDialerOpen(true)}
+        />
 
-      {/* 3. Main Dynamic Content Area */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6">
-        {currentTab === 'first-aid' && (
-          <FirstAidView
-            onOpenDialer={() => setIsDialerOpen(true)}
-            onOpenAlertModal={handleOpenAlertModalWithContext}
-            emergencyContacts={contacts}
-            emergencyNumber={emergencyNumber}
-          />
-        )}
+        {/* 2. Top App Navigation Header */}
+        <Header
+          currentTab={currentTab}
+          onSelectTab={setCurrentTab}
+          onOpenEmergencyModal={() => setIsDialerOpen(true)}
+          onOpenQuickAlert={handleQuickAlert}
+          onOpenPrivacyModal={() => setIsPrivacyOpen(true)}
+          contactCount={contacts.length}
+        />
 
-        {currentTab === 'translate' && (
-          <WarningTranslateView
-            onOpenAlertModal={handleOpenAlertModalWithContext}
-            preferredLang={preferredLang}
-            onLanguageChange={handleLanguageChange}
-          />
-        )}
+        {/* 3. Main Dynamic Content Area */}
+        <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6">
+          {currentTab === 'first-aid' && (
+            <FirstAidView
+              onOpenDialer={() => setIsDialerOpen(true)}
+              onOpenAlertModal={handleOpenAlertModalWithContext}
+              onSelectTab={setCurrentTab}
+              emergencyContacts={contacts}
+              emergencyNumber={emergencyNumber}
+            />
+          )}
 
-        {currentTab === 'protocols' && (
-          <OfflineProtocolsView
-            onOpenDialer={() => setIsDialerOpen(true)}
-            onOpenAlertModal={handleOpenAlertModalWithContext}
-            emergencyNumber={emergencyNumber}
-          />
-        )}
+          {currentTab === 'translate' && (
+            <WarningTranslateView
+              onOpenAlertModal={handleOpenAlertModalWithContext}
+              preferredLang={preferredLang}
+              onLanguageChange={handleLanguageChange}
+            />
+          )}
 
-        {currentTab === 'contacts' && (
-          <EmergencyContactsView
-            contacts={contacts}
-            onUpdateContacts={setContacts}
-            onTriggerTestAlert={handleOpenAlertModalWithContext}
-          />
-        )}
-      </main>
+          {currentTab === 'protocols' && (
+            <OfflineProtocolsView
+              onOpenDialer={() => setIsDialerOpen(true)}
+              onOpenAlertModal={handleOpenAlertModalWithContext}
+              emergencyNumber={emergencyNumber}
+            />
+          )}
 
-      {/* 4. Footer */}
-      <footer className="mt-8 border-t border-slate-200/80 bg-white/60 backdrop-blur-md py-4 px-4 text-center text-xs text-slate-500 shadow-sm">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-700">JeevanSetu</span>
-            <span>•</span>
-            <span>Accessible Multimodal Health &amp; Safety Companion</span>
+          {currentTab === 'contacts' && (
+            <EmergencyContactsView
+              contacts={contacts}
+              onUpdateContacts={setContacts}
+              onTriggerTestAlert={handleOpenAlertModalWithContext}
+            />
+          )}
+        </main>
+
+        {/* 4. Modern Footer */}
+        <footer className="mt-12 border-t border-slate-200/80 bg-white/80 backdrop-blur-xl py-6 px-4 text-xs text-slate-500 shadow-2xs">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-slate-900">JeevanSetu</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-600">Accessible Multimodal Health &amp; Safety First-Aid Companion</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsPrivacyOpen(true)}
+                className="text-slate-600 hover:text-slate-900 transition underline flex items-center gap-1 cursor-pointer font-medium"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Zero-Retention Privacy Guarantees</span>
+              </button>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-500">Gemini 3.7 / 2.5 Flash</span>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsPrivacyOpen(true)}
-              className="text-slate-600 hover:text-slate-900 font-medium underline"
-            >
-              Privacy &amp; Data Guarantees
-            </button>
-            <span>•</span>
-            <span>Powered by Gemini Multimodal AI</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       {/* Modals & Dialogs */}
       <EmergencyDialerModal

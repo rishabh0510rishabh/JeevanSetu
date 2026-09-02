@@ -10,20 +10,18 @@ import {
   Bell,
   CheckCircle2,
   XCircle,
-  HelpCircle,
-  Clock,
   ShieldAlert,
-  Flame,
   Activity,
   Trash2,
-  ChevronRight,
   Info,
+  Check,
 } from 'lucide-react';
 import { FirstAidGuidance, SeverityLevel, EmergencyContact } from '../types';
 import { FIRST_AID_PRESETS, FirstAidPreset } from '../data/presets';
 import { fetchFirstAidGuidance } from '../services/api';
 import { speechService } from '../services/speech';
 import { CameraCaptureModal } from './CameraCaptureModal';
+import { HeroSection } from './HeroSection';
 
 interface FirstAidViewProps {
   onOpenDialer: () => void;
@@ -33,6 +31,7 @@ interface FirstAidViewProps {
     category: string;
     guidance: string[];
   }) => void;
+  onSelectTab: (tab: 'first-aid' | 'translate' | 'protocols' | 'contacts') => void;
   emergencyContacts: EmergencyContact[];
   emergencyNumber: string;
 }
@@ -40,6 +39,7 @@ interface FirstAidViewProps {
 export const FirstAidView: React.FC<FirstAidViewProps> = ({
   onOpenDialer,
   onOpenAlertModal,
+  onSelectTab,
   emergencyContacts,
   emergencyNumber,
 }) => {
@@ -48,6 +48,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [guidance, setGuidance] = useState<FirstAidGuidance | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -81,6 +82,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
     setIsLoading(true);
     speechService.stop();
     setIsPlayingAudio(false);
+    setCompletedSteps({});
 
     try {
       const result = await fetchFirstAidGuidance(text, image || undefined);
@@ -90,6 +92,13 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleToggleStep = (index: number) => {
+    setCompletedSteps((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
 
   const handleToggleAudio = () => {
@@ -114,90 +123,65 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
     setInputText('');
     setSelectedImage(null);
     setGuidance(null);
+    setCompletedSteps({});
     setErrorMsg(null);
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Clay Banner / Hero Intro */}
-      <div className="clay-card-red p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-red-500 text-white flex items-center justify-center shadow-md shadow-red-500/30">
-                <Activity className="w-5 h-5" />
-              </div>
-              <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-                Multimodal Emergency &amp; First-Aid Assistant
-              </h1>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-700 mt-1 max-w-2xl font-medium leading-relaxed">
-              Describe what happened or take a photo of an injury (cut, burn, spill, reaction) to get immediate plain-language steps within seconds.
-            </p>
-          </div>
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* 1. Hero Section Showcase */}
+      <HeroSection
+        onOpenDialer={onOpenDialer}
+        onOpenAlertModal={() =>
+          onOpenAlertModal({
+            summary: 'QUICK EMERGENCY ALERT: Immediate campus assistance requested.',
+            severity: 'HIGH',
+            category: 'Emergency Dispatch',
+            guidance: ['User triggered quick SOS broadcast from JeevanSetu.'],
+          })
+        }
+        onSelectTab={onSelectTab}
+        onApplyPreset={handleApplyPreset}
+        emergencyNumber={emergencyNumber}
+      />
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={onOpenDialer}
-              className="clay-btn-red flex items-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm cursor-pointer"
-            >
-              <PhoneCall className="w-4 h-4" />
-              <span>Call {emergencyNumber}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Rapid Test Presets */}
-        <div className="mt-4 pt-3.5 border-t border-red-200/80">
-          <span className="text-[11px] font-extrabold text-red-900/80 uppercase tracking-wider block mb-2">
-            Instant Test Scenarios:
-          </span>
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {FIRST_AID_PRESETS.map((preset) => (
-              <button
-                key={preset.id}
-                onClick={() => handleApplyPreset(preset)}
-                className="clay-btn bg-white hover:bg-red-50 text-slate-800 border border-red-200/80 px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-              >
-                <span className="w-2 h-2 rounded-full bg-red-500 shadow-sm" />
-                <span>{preset.title}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Input Section - Tactile Clay Card */}
-      <form onSubmit={handleSubmit} className="clay-card p-4 sm:p-6 space-y-4">
+      {/* 2. Multimodal Input Card */}
+      <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-5 sm:p-7 border border-slate-200/90 space-y-4">
         <div>
-          <label htmlFor="first-aid-input" className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
-            Describe the situation or injury:
-          </label>
-          <div className="clay-inset p-1">
+          <div className="flex items-center justify-between mb-2">
+            <label htmlFor="first-aid-input" className="block text-xs font-black text-slate-700 uppercase tracking-wider">
+              Describe the situation or injury:
+            </label>
+            <span className="text-[11px] text-slate-500 font-medium hidden sm:inline">
+              Natural language symptoms or chemical names
+            </span>
+          </div>
+
+          <div className="glass-inset rounded-2xl p-2 focus-within:border-rose-500/80 focus-within:ring-2 focus-within:ring-rose-500/20 transition bg-white">
             <textarea
               id="first-aid-input"
               rows={3}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="e.g. 'I burned my hand on the stove and blisters are forming', 'deep kitchen knife cut with continuous bleeding', 'someone is coughing and choking'..."
-              className="w-full bg-transparent p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none font-medium"
+              placeholder="e.g. 'Boiling water spilled over forearm with immediate redness and blistering', 'Deep knife cut on hand with continuous bleeding', 'Someone is coughing and having severe difficulty breathing'..."
+              className="w-full bg-transparent p-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none font-medium leading-relaxed"
             />
           </div>
         </div>
 
-        {/* Media / Photo Upload Actions */}
+        {/* Media / Action Toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => setIsCameraOpen(true)}
-              className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-2xs flex items-center gap-2 transition cursor-pointer"
             >
-              <Camera className="w-4 h-4 text-red-500" />
-              <span>Use Camera</span>
+              <Camera className="w-4 h-4 text-rose-600" />
+              <span>Take Photo</span>
             </button>
 
-            <label className="clay-btn bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3.5 py-2 text-xs sm:text-sm flex items-center gap-2 cursor-pointer">
+            <label className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-2xs flex items-center gap-2 transition cursor-pointer">
               <Upload className="w-4 h-4 text-sky-600" />
               <span>Upload Photo</span>
               <input
@@ -212,11 +196,11 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedImage(null)}
-                className="text-xs text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 p-1.5 cursor-pointer ml-1"
+                className="text-xs text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-50 border border-rose-200 cursor-pointer"
                 title="Remove photo"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Remove</span>
+                <span>Remove Photo</span>
               </button>
             )}
           </div>
@@ -226,7 +210,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               <button
                 type="button"
                 onClick={handleClear}
-                className="clay-btn bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 px-3.5 py-2 text-xs font-bold border border-slate-200 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 transition cursor-pointer"
               >
                 Clear
               </button>
@@ -235,7 +219,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
             <button
               type="submit"
               disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className="clay-btn-red flex items-center gap-2 px-5 py-2.5 text-sm font-black cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+              className="btn-emergency flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold cursor-pointer disabled:opacity-40 disabled:pointer-events-none transition glow-red"
             >
               {isLoading ? (
                 <>
@@ -252,25 +236,26 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
           </div>
         </div>
 
-        {/* Selected Image Thumbnail */}
+        {/* Selected Image Thumbnail Preview */}
         {selectedImage && (
-          <div className="clay-card p-2 inline-block mt-2 max-w-xs">
-            <div className="relative rounded-xl overflow-hidden border border-red-200">
+          <div className="mt-3 p-2.5 rounded-2xl bg-slate-50 border border-slate-200 inline-flex items-center gap-3">
+            <div className="relative rounded-xl overflow-hidden border border-rose-300 max-w-[120px] shadow-2xs">
               <img
                 src={selectedImage}
                 alt="Injury Preview"
-                className="max-h-40 w-auto object-cover"
+                className="h-20 w-28 object-cover"
               />
-              <div className="absolute top-1 right-1 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-                Ready for AI Inspection
-              </div>
+            </div>
+            <div>
+              <span className="text-xs font-bold text-slate-900 block">Image Attached</span>
+              <span className="text-[11px] text-slate-500 font-medium">Gemini multimodal vision triage active</span>
             </div>
           </div>
         )}
 
         {errorMsg && (
-          <div className="clay-card-red p-3 text-xs text-red-900 font-medium flex items-center gap-2 border border-red-300">
-            <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -284,35 +269,35 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
         title="Capture Injury or Hazard Photo"
       />
 
-      {/* Results Display */}
+      {/* 3. Guidance Results Card */}
       {guidance && (
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
-          {/* Conservative Severity Escalation Prominent Header */}
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          {/* Conservative Severity Escalation Card */}
           {guidance.isEmergency || guidance.severity === 'CRITICAL_EMERGENCY' || guidance.severity === 'HIGH' ? (
-            <div className="clay-btn-red p-4 sm:p-5 rounded-3xl animate-pulse">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-white text-red-600 flex items-center justify-center shrink-0 shadow-lg shadow-red-950/20">
-                    <ShieldAlert className="w-7 h-7" />
+            <div className="p-5 rounded-3xl bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 text-white shadow-lg shadow-rose-600/20 border border-rose-500 relative overflow-hidden">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-white text-rose-600 flex items-center justify-center shrink-0 shadow-md">
+                    <ShieldAlert className="w-7 h-7 animate-bounce" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="bg-white/20 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-inner">
+                      <span className="bg-white/20 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         High Severity Alert
                       </span>
                     </div>
-                    <h2 className="text-base sm:text-lg font-black text-white mt-0.5">
+                    <h2 className="text-base sm:text-lg font-black text-white mt-1">
                       {guidance.immediateCriticalAction || 'Potential Life-Threatening Emergency Detected'}
                     </h2>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
                   <button
                     onClick={onOpenDialer}
-                    className="flex-1 sm:flex-initial clay-btn bg-white hover:bg-slate-50 text-red-600 font-black px-4 py-2.5 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                    className="flex-1 sm:flex-initial bg-white hover:bg-slate-50 text-rose-600 font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md transition"
                   >
-                    <PhoneCall className="w-4 h-4 text-red-600" />
+                    <PhoneCall className="w-4 h-4 text-rose-600" />
                     <span>Call {emergencyNumber} Now</span>
                   </button>
                   <button
@@ -324,7 +309,7 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                         guidance: guidance.steps,
                       })
                     }
-                    className="flex-1 sm:flex-initial clay-btn-amber px-4 py-2.5 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                    className="flex-1 sm:flex-initial btn-amber px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
                     <Bell className="w-4 h-4" />
                     <span>Alert Contacts</span>
@@ -334,49 +319,54 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
             </div>
           ) : null}
 
-          {/* Core Guidance Card */}
-          <div className="clay-card p-4 sm:p-6 space-y-5">
+          {/* Main Guidance Detail Card */}
+          <div className="glass-card rounded-3xl p-5 sm:p-7 border border-slate-200/90 space-y-6">
             {/* Meta Header & Audio Reader */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
-              <div>
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                     Category:
                   </span>
-                  <span className="text-sm font-black text-slate-800 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200">
+                  <span className="text-xs font-extrabold text-slate-900 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200">
                     {guidance.category}
                   </span>
                   <span
-                    className={`text-xs font-black px-3 py-1 rounded-xl uppercase ${
+                    className={`text-xs font-extrabold px-3 py-1 rounded-xl uppercase border ${
                       guidance.severity === 'CRITICAL_EMERGENCY'
-                        ? 'bg-red-100 text-red-700 border border-red-200'
+                        ? 'bg-red-50 text-red-700 border-red-200'
                         : guidance.severity === 'HIGH'
-                        ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                        : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                        ? 'bg-amber-50 text-amber-800 border-amber-200'
+                        : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                     }`}
                   >
                     Severity: {guidance.severity.replace('_', ' ')}
                   </span>
                 </div>
-                <p className="text-sm text-slate-700 mt-2 font-semibold">
+                <p className="text-sm text-slate-800 font-semibold leading-relaxed">
                   {guidance.summary}
                 </p>
               </div>
 
-              {/* Audio Listen Button */}
+              {/* Audio Listen Bar */}
               <button
                 onClick={handleToggleAudio}
-                className={`clay-btn px-4 py-2 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2.5 transition cursor-pointer border ${
                   isPlayingAudio
-                    ? 'clay-btn-amber animate-pulse'
-                    : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200'
+                    ? 'bg-amber-500 text-white border-amber-600 shadow-md shadow-amber-500/30'
+                    : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200 shadow-2xs'
                 }`}
-                title="Listen to instructions read aloud"
+                title="Listen to step-by-step instructions read aloud"
               >
                 {isPlayingAudio ? (
                   <>
-                    <Square className="w-4 h-4" />
-                    <span>Stop Audio</span>
+                    <div className="flex items-center gap-0.5 h-4">
+                      <span className="w-1 bg-white rounded-full wave-bar-1" />
+                      <span className="w-1 bg-white rounded-full wave-bar-2" />
+                      <span className="w-1 bg-white rounded-full wave-bar-3" />
+                      <span className="w-1 bg-white rounded-full wave-bar-4" />
+                    </div>
+                    <span>Pause Audio</span>
                   </>
                 ) : (
                   <>
@@ -387,78 +377,103 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
               </button>
             </div>
 
-            {/* Step-by-Step Instructions */}
+            {/* Interactive Step-by-Step Checklist */}
             <div>
-              <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Step-by-Step First-Aid Protocol:</span>
-              </h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>Step-by-Step Protocol (Tap to mark completed):</span>
+                </h3>
+                <span className="text-[11px] text-slate-500 font-semibold">
+                  {Object.values(completedSteps).filter(Boolean).length} of {guidance.steps.length} completed
+                </span>
+              </div>
+
               <div className="space-y-2.5">
-                {guidance.steps.map((step, index) => (
-                  <div
-                    key={index}
-                    className="clay-inset-white p-3.5 flex items-start gap-3 text-slate-800 text-sm leading-relaxed"
-                  >
-                    <span className="w-6 h-6 rounded-lg bg-red-100 text-red-700 border border-red-200 flex items-center justify-center font-black text-xs shrink-0 mt-0.5 shadow-sm">
-                      {index + 1}
-                    </span>
-                    <span className="flex-1 font-semibold text-slate-800">{step}</span>
-                  </div>
-                ))}
+                {guidance.steps.map((step, index) => {
+                  const isDone = !!completedSteps[index];
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => handleToggleStep(index)}
+                      className={`p-3.5 sm:p-4 rounded-2xl flex items-start gap-3.5 transition-all cursor-pointer border ${
+                        isDone
+                          ? 'bg-emerald-50/80 border-emerald-300 text-slate-500'
+                          : 'bg-white hover:bg-slate-50/80 border-slate-200 text-slate-800 shadow-2xs'
+                      }`}
+                    >
+                      <div
+                        className={`w-6 h-6 rounded-lg flex items-center justify-center font-black text-xs shrink-0 mt-0.5 transition ${
+                          isDone
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-rose-100 border border-rose-300 text-rose-700'
+                        }`}
+                      >
+                        {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : index + 1}
+                      </div>
+                      <span className={`flex-1 text-sm leading-relaxed ${isDone ? 'line-through text-slate-400' : 'font-semibold'}`}>
+                        {step}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* DO NOTS Warning Box */}
-            {guidance.doNots && guidance.doNots.length > 0 && (
-              <div className="clay-card-amber p-4 space-y-2 border border-amber-300">
-                <div className="flex items-center gap-2 text-amber-950 text-xs font-black uppercase tracking-wider">
-                  <XCircle className="w-4 h-4 text-amber-600" />
-                  <span>Crucial: What NOT To Do</span>
+            {/* Warnings Grid (DO NOTS + Red Flags) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* DO NOTS */}
+              {guidance.doNots && guidance.doNots.length > 0 && (
+                <div className="glass-card-amber rounded-2xl p-4 space-y-2 border border-amber-300">
+                  <div className="flex items-center gap-2 text-amber-950 text-xs font-black uppercase tracking-wider">
+                    <XCircle className="w-4 h-4 text-amber-600" />
+                    <span>Crucial: What NOT To Do</span>
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-amber-900 font-medium pl-1">
+                    {guidance.doNots.map((dont, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-amber-600 font-bold">•</span>
+                        <span>{dont}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-1.5 text-xs text-amber-900 font-medium pl-1">
-                  {guidance.doNots.map((dont, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-amber-600 font-bold">•</span>
-                      <span>{dont}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              )}
 
-            {/* Red Flag Warning Signs */}
-            {guidance.warningSigns && guidance.warningSigns.length > 0 && (
-              <div className="clay-card-red p-4 space-y-2 border border-red-300">
-                <div className="flex items-center gap-2 text-red-950 text-xs font-black uppercase tracking-wider">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span>Red Flag Warning Signs (Seek ER If Observed)</span>
+              {/* Red Flag Signs */}
+              {guidance.warningSigns && guidance.warningSigns.length > 0 && (
+                <div className="glass-card-red rounded-2xl p-4 space-y-2 border border-rose-300">
+                  <div className="flex items-center gap-2 text-rose-950 text-xs font-black uppercase tracking-wider">
+                    <AlertTriangle className="w-4 h-4 text-rose-600" />
+                    <span>Red Flags (Seek ER If Observed)</span>
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-rose-900 font-medium pl-1">
+                    {guidance.warningSigns.map((flag, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-rose-600 font-bold">•</span>
+                        <span>{flag}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-1.5 text-xs text-red-900 font-medium pl-1">
-                  {guidance.warningSigns.map((flag, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-red-600 font-bold">•</span>
-                      <span>{flag}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              )}
+            </div>
 
-            {/* When to Seek Care Info */}
+            {/* When to Seek Clinic Care */}
             {guidance.whenToSeekCare && (
-              <div className="clay-card-blue p-3.5 flex items-start gap-2.5 text-xs text-sky-950 border border-sky-200">
+              <div className="glass-card-blue rounded-2xl p-4 flex items-start gap-3 text-xs text-sky-950 border border-sky-200">
                 <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-sky-900 font-bold">When to seek professional clinic care: </strong>
-                  <span className="font-medium">{guidance.whenToSeekCare}</span>
+                  <strong className="text-sky-900 font-bold block mb-0.5">When to seek professional clinic care:</strong>
+                  <span className="text-sky-800 font-medium">{guidance.whenToSeekCare}</span>
                 </div>
               </div>
             )}
 
-            {/* Bottom Contact Alert Button */}
-            <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-slate-500 font-medium">
-                Need to keep a roommate or RA updated on your status?
+            {/* Bottom Contact Dispatch Action */}
+            <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs text-slate-500 font-medium text-center sm:text-left">
+                Keep designated contacts or RA updated on your status?
               </span>
               <button
                 onClick={() =>
@@ -469,10 +484,10 @@ export const FirstAidView: React.FC<FirstAidViewProps> = ({
                     guidance: guidance.steps,
                   })
                 }
-                className="w-full sm:w-auto clay-btn-amber px-4 py-2.5 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto btn-amber px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
               >
                 <Bell className="w-4 h-4" />
-                <span>Alert Emergency Contact ({emergencyContacts.length})</span>
+                <span>Alert Emergency Contacts ({emergencyContacts.length})</span>
               </button>
             </div>
           </div>
