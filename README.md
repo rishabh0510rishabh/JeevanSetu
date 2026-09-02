@@ -142,6 +142,13 @@ graph TD
   npm start
   ```
 
+- **Running Automated Tests (Vitest):**
+  ```bash
+  npm test
+  # or watch mode
+  npm run test:watch
+  ```
+
 - **Type Checking:**
   ```bash
   npm run lint
