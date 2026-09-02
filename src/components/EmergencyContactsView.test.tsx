@@ -19,7 +19,7 @@ describe('EmergencyContactsView Component', () => {
       name: 'Morgan Chen (RA)',
       phone: '+1 (555) 345-6789',
       email: 'ra.morgan@campus.edu',
-      relationship: 'Resident Advisor (RA)',
+      relationship: 'RA / Dorm Staff',
       isPrimary: false,
     },
   ];

@@ -229,9 +229,10 @@ export const EmergencyContactsView: React.FC<EmergencyContactsViewProps> = ({
                   className="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none font-medium cursor-pointer"
                 >
                   <option value="Roommate">Roommate</option>
-                  <option value="Resident Advisor (RA)">Resident Advisor (RA)</option>
-                  <option value="Family">Family</option>
-                  <option value="Campus Health">Campus Health</option>
+                  <option value="RA / Dorm Staff">RA / Dorm Staff</option>
+                  <option value="Parent / Family">Parent / Family</option>
+                  <option value="Campus Security">Campus Security</option>
+                  <option value="Doctor / Clinic">Doctor / Clinic</option>
                   <option value="Friend">Friend</option>
                   <option value="Other">Other</option>
                 </select>
